@@ -1,0 +1,69 @@
+# Set up apt
+- name: set Ubuntu package sources
+  replace: dest=/etc/apt/sources.list regexp='^(\s*deb(?:-src)?\s+http://)[a-z0-9._-]+.ubuntu.com(/ubuntu)' replace='\1{{ubuntu_packages_mirror}}\2'
+  sudo: true
+- apt: update_cache=yes
+  sudo: true
+
+# Configure locale
+- name: configure locale
+  copy: src=locale dest=/etc/default/locale
+  sudo: true
+
+# Configure time zone to host's time zone
+- name: determine host time zone
+  stat: path=/etc/localtime
+  register: localtime_stat
+  connection: local
+- name: configure time zone
+  copy: content='{{localtime_stat.stat.lnk_source.replace("/usr/share/zoneinfo/", "") + "\n"}}' dest=/etc/timezone
+  sudo: true
+  notify:
+  - update time zone
+
+# Time sync and other VirtualBox issues
+- apt: name=dkms
+  sudo: true
+- apt: name=virtualbox-guest-additions state=latest
+  sudo: true
+
+# Configure ~/.bashrc.d
+- file: path=~/.bashrc.d state=directory
+- copy: src=bashrc.sh dest=~/.bashrc
+
+# Configure user environment
+- copy: src=vagrant-user.sh dest=~/.bashrc.d/
+
+# Copy host's ~/.ssh/config to the guest
+- name: check presence of ~/.ssh/config on host system
+  stat: path=~/.ssh/config
+  connection: local
+  register: ssh_config_stat
+- name: copy host's ~/.ssh/config to the guest
+  copy: src=~/.ssh/config dest=~/.ssh/config
+  when: ssh_config_stat.stat.exists
+- name: delete ~/.ssh/config on the guest
+  file: path=~/.ssh/config state=absent
+  when: not ssh_config_stat.stat.exists
+
+# Must-have utilities
+- name: install utilities
+  apt: name={{item}}
+  with_items:
+  - ack-grep
+  - curl
+  - git
+  - htop
+  - manpages-dev
+  - tmux
+  - vim
+
+# Custom user actions
+- name: checking VAGRANT_USER_PREP_SCRIPT environment variable
+  shell: env | grep VAGRANT_USER_PREP_SCRIPT | cut -d= -f2
+  register: user_prep_script_result
+  changed_when: false
+  connection: local
+- name: executing user prep script
+  script: "{{user_prep_script_result.stdout}}"
+  when: user_prep_script_result.stdout
