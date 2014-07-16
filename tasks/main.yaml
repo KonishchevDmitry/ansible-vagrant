@@ -57,6 +57,7 @@
   - manpages-dev
   - tmux
   - vim
+  sudo: true
 
 # Custom user actions
 - name: checking VAGRANT_USER_PREP_SCRIPT environment variable

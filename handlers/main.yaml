@@ -1,2 +1,3 @@
 - name: update time zone
+  sudo: true
   command: dpkg-reconfigure --frontend noninteractive tzdata
