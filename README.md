@@ -45,5 +45,11 @@ $ vagrant ssh
 But it's better to add the following alias to your ``~/.bashrc`` which takes care of your sessions and SSH Agent forwarding issues:
 ```sh
 alias vagrant-ssh='vagrant ssh -- -t ". ~/.bashrc.d/vagrant-user.sh; tmux has-session 2>/dev/null || { unset SSH_AUTH_SOCK && tmux new-session -d; } && exec tmux attach-session"'
+
 ```
 and use it instead of ``vargrant ssh``.
+
+If you create the development environment for Python projects, consider to add https://github.com/KonishchevDmitry/ansible-devel-virtualenv to your Ansible roles and use the following alias instead of ``vagrant-ssh``:
+```sh
+alias vagrant-ssh-virtualenv='vagrant ssh -- -t ". ~/.bashrc.d/vagrant-user.sh; tmux has-session 2>/dev/null || { unset SSH_AUTH_SOCK && tmux new-session -d && tmux send-keys \"workon vagrant\" Enter; } && exec tmux attach-session"'
+```
