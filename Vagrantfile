@@ -3,7 +3,7 @@
 #
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "ubuntu/precise64"
 
   config.vm.provider "virtualbox" do |vm|
     # Fix time sync issue after laptop sleep
