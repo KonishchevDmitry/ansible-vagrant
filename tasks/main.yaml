@@ -1,17 +1,17 @@
 # Set up apt
 - name: add Ubuntu backports packages
   replace: dest=/etc/apt/sources.list regexp='^(#\s*)(deb(?:-src)?\s+http://[a-z0-9._-]+.ubuntu.com/ubuntu\s+[a-z]+-backports)' replace='\2'
-  sudo: true
+  become: true
 - name: use Yandex mirror for Ubuntu packages
   replace: dest=/etc/apt/sources.list regexp='^(\s*deb(?:-src)?\s+http://)[a-z0-9._-]+.ubuntu.com(/ubuntu)' replace='\1{{ubuntu_packages_mirror}}\2'
-  sudo: true
+  become: true
 - apt: update_cache=yes
-  sudo: true
+  become: true
 
 # Configure locale
 - name: configure locale
   copy: src=locale dest=/etc/default/locale
-  sudo: true
+  become: true
 
 # Configure time zone to host's time zone
 - name: determine host time zone
@@ -20,7 +20,7 @@
   connection: local
 - name: configure time zone
   copy: content='{{localtime_stat.stat.lnk_source.replace("/usr/share/zoneinfo/", "") + "\n"}}' dest=/etc/timezone
-  sudo: true
+  become: true
   notify:
   - update time zone
 
@@ -32,7 +32,7 @@
   - virtualbox-guest-dkms
   - virtualbox-guest-utils
   - virtualbox-guest-x11
-  sudo: true
+  become: true
 
 # Configure ~/.bashrc.d
 - file: path=~/.bashrc.d state=directory
@@ -64,7 +64,7 @@
   - manpages-dev
   - tmux
   - vim
-  sudo: true
+  become: true
 
 # Custom user actions
 - name: checking VAGRANT_USER_PREP_SCRIPT environment variable
