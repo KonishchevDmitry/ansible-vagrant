@@ -19,7 +19,7 @@
   register: localtime_stat
   connection: local
 - name: configure time zone
-  copy: content='{{localtime_stat.stat.lnk_source.replace("/usr/share/zoneinfo/", "") + "\n"}}' dest=/etc/timezone
+  file: src={{localtime_stat.stat.lnk_source}} dest=/etc/localtime state=link force=yes
   become: true
   notify:
   - update time zone
