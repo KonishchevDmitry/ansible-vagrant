@@ -24,7 +24,8 @@
 - name: use Yandex mirror for Ubuntu packages
   replace: dest=/etc/apt/sources.list regexp='^(\s*deb(?:-src)?\s+http://)[a-z0-9._-]+.ubuntu.com(/ubuntu)' replace='\1{{ubuntu_packages_mirror}}\2'
   become: true
-- apt: update_cache=yes
+- name: update apt cache
+  apt: update_cache=yes
   become: true
 
 # Configure locale
