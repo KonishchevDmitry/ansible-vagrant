@@ -5,12 +5,12 @@ following files to the project root:
 └── provisioning
     ├── roles
     │   └── vagrant
-    └── site.yaml
+    └── bootstrap.yaml
 ```
 
 Where:
 * ``provisioning/roles/vagrant`` is this repository
-* ``provisioning/roles/site.yaml`` is:
+* ``provisioning/roles/bootstrap.yaml`` is:
 ```yaml
 - hosts: all
   roles:

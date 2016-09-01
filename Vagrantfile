@@ -3,7 +3,7 @@
 #
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/precise64"
+  config.vm.box = "bento/ubuntu-16.04"
 
   config.vm.provider "virtualbox" do |vm|
     # Fix time sync issue after laptop sleep
@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/site.yaml"
+    ansible.playbook = "provisioning/bootstrap.yaml"
     #ansible.raw_arguments = ["--check"]
     #ansible.raw_arguments = ["-vvv"]
   end
