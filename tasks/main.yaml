@@ -1,11 +1,3 @@
-# Ansible supports only Python 2, so we have to install it first
-- name: update APT package index
-  raw: apt-get update
-  become: true
-- name: install Python 2
-  raw: apt-get -y install python
-  become: true
-
 # ssh may pass locale environment variables to remote host, so we should support user's locales on the guest
 - name: obtain a list of user's locales
   shell: locale | cut -d '=' -f 2 | tr -d '"' | sort -u
