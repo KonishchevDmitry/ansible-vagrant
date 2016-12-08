@@ -5,7 +5,7 @@
   changed_when: false
   connection: local
 - name: generate user's locales
-  shell: locale-gen {{user_locales_result.stdout}}
+  command: locale-gen {{user_locales_result.stdout}}
   when: user_locales_result.stdout
   become: true
 
