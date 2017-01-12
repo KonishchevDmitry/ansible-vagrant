@@ -10,9 +10,8 @@ Vagrant.configure("2") do |config|
         "#{__FILE__}:#{__LINE__}: Unable to detect number of cores on host machine."
   end
 
-  config.vm.box = "bento/ubuntu-16.04"
-
-  config.vm.provider "virtualbox" do |vm|
+  config.vm.provider "virtualbox" do |vm, override|
+    override.vm.box = "bento/ubuntu-16.04"
     vm.cpus = cores
 
     # Fix time sync issue after laptop sleep
