@@ -47,8 +47,18 @@
   become: true
 
 # Configure ~/.bashrc.d
-- file: path=~/.bashrc.d state=directory
-- copy: src=bashrc.sh dest=~/.bashrc
+- name: create ~/.bashrc.d
+  file:
+    path: ~/.bashrc.d
+    state: directory
+- name: check whether ~/.bashrc supports ~/.bashrc.d
+  shell: fgrep -q '~/.bashrc.d' ~/.bashrc
+  register: bashrcd_support
+  failed_when: "bashrcd_support.rc not in (0, 1)"
+  changed_when: False
+- name: configure ~/.bashrc
+  copy: src=bashrc.sh dest=~/.bashrc
+  when: bashrcd_support.rc != 0
 
 # Configure user environment
 - copy: src=vagrant-user.sh dest=~/.bashrc.d/
