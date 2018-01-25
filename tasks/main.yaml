@@ -31,7 +31,10 @@
   register: localtime_stat
   connection: local
 - name: configure time zone
-  file: src={{localtime_stat.stat.lnk_source}} dest=/etc/localtime state=link force=yes
+  # macOS Sierra: /usr/share/zoneinfo/Europe/Moscow
+  # macOS High Sierra: /usr/share/zoneinfo.default/Europe/Moscow
+  # Linux: /usr/share/zoneinfo/Europe/Moscow
+  file: src={{localtime_stat.stat.lnk_source | replace("zoneinfo.default", "zoneinfo")}} dest=/etc/localtime state=link force=yes
   become: true
   notify:
   - update time zone
