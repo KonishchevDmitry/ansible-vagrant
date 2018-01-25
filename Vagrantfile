@@ -16,6 +16,12 @@ Vagrant.configure("2") do |config|
 
     # Fix time sync issue after laptop sleep
     vm.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", "1000"]
+
+    # Speed up disk by using less reliable writes
+    vm.customize ["storagectl", :id, "--name", "SATA Controller", "--hostiocache", "on"]
+
+    # Use VirtIO network card as more reliable one than the default e1000 with full emulation
+    vm.customize ["modifyvm", :id, "--nictype1", "virtio"]
   end
 
   config.vm.provision "ansible" do |ansible|
