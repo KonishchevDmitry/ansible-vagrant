@@ -33,8 +33,9 @@
 - name: configure time zone
   # macOS Sierra: /usr/share/zoneinfo/Europe/Moscow
   # macOS High Sierra: /usr/share/zoneinfo.default/Europe/Moscow
+  # macOS Mojave: /private/var/db/timezone/tz/2019b.1.0/zoneinfo/Europe/Moscow
   # Linux: /usr/share/zoneinfo/Europe/Moscow
-  file: src={{localtime_stat.stat.lnk_source | replace("zoneinfo.default", "zoneinfo")}} dest=/etc/localtime state=link force=yes
+  file: src={{localtime_stat.stat.lnk_source | regex_replace("^.*/zoneinfo(\\.default)?", "/usr/share/zoneinfo")}} dest=/etc/localtime state=link force=yes
   become: true
   notify:
   - update time zone
